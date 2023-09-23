@@ -948,26 +948,12 @@ client.on("messageCreate", async (message) => {
       let number = parseInt(message.content); //Convert the current Message from a String to an Integer
 
       let current = parseInt(data.Count); //Convert the Current Number from a String to an Integer
-
+if(isNaN(number)){
+    message.delete() //Deletes the Message if it's not a Number.
+}
       if (!isNaN(number)) { 
-
         if (message.author.id == data.UserID) { //If the next Number sent is by the same user
-
-          data.Count = 0; //Reset Game to 0
-
-          await data.save(); //Save Data in Database
-
-          message.react("❌"); //React with Error
-
-          data.UserID = null; //Reset User ID in Database to Null
-
-          await data.save(); //Save Data in Database
-
-          return message.channel.send({
-            content: `${message.author.username} has messed it up, stopped at ${
-              number - 1
-            } ,resetting game to start at 1`,
-          }); 
+           message.delete() //Deletes the message sent by the same user.
         } else { //Different User Sent a Number
           if (number == current + 1) { //Checks to see if number sent is one greater than the current number
             data.Count = data.Count + 1; //Set the new number in the database
@@ -977,13 +963,7 @@ client.on("messageCreate", async (message) => {
           } 
           
           else { //Number Sent is not one greater than the current number
-            data.Count = 0; //Reset Game to 0
-            data.UserID = null; //Reset User ID in Database
-            await data.save();
-            message.react("❌"); 
-            message.channel.send({
-              content: `${message.author.username} has messed it up, stopped at ${current} ,resetting game to start at 1`,
-            });
+                message.delete() //Deletes the message with the wrong number
           }
         }
       }
